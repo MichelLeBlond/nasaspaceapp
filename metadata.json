@@ -1,0 +1,5 @@
+{
+  "name": "Extraterrestrial Habitat Design and Analysis Platform",
+  "description": "An interactive application to learn about and design habitats for the Moon, Mars, and in-space assembly. Explore descriptions of extraterrestrial environments and then use the builder to construct your own habitats.",
+  "requestFramePermissions": []
+}
