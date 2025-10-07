@@ -1,3 +1,4 @@
+
 # Stage 1: Build the React frontend
 # This stage installs all dependencies (including devDependencies),
 # and runs the build script to generate static assets.
@@ -27,17 +28,23 @@ ENV NODE_ENV=production
 # 8080 is a common default.
 ENV PORT=8080
 
-WORKDIR /app
+WORKDIR /app/server
 
 # Create a non-root user for security best practices
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
 # Copy only the necessary files from the builder stage
+# Copy frontend build assets. Your server.js should serve from a 'public' or 'dist' folder.
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/server.js .
-COPY --from=builder /app/package.json .
-COPY --from=builder /app/node_modules ./node_modules
+
+# Copy server-specific files
+COPY --from=builder /app/server/server.js .
+COPY --from=builder /app/server/package.json .
+COPY --from=builder /app/server/package-lock.json .
+
+# Install only the server's production dependencies
+RUN npm ci --omit=dev
 
 EXPOSE 8080
 
