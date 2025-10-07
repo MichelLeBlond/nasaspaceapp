@@ -41,7 +41,7 @@ COPY --from=builder /app/dist ./dist
 # Copy server-specific files
 COPY --from=builder /app/server/server.js .
 COPY --from=builder /app/server/package.json .
-COPY --from=builder /app/server/package-lock.json .
+
 
 # Install only the server's production dependencies
 RUN npm ci --omit=dev
