@@ -9,22 +9,21 @@ steps:
 
   # 2. Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'us-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/nasaspaceapp-image:latest'
-
+    args: ['push', 'us-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/nasaspaceapp-image:latest']
+  
   # 3. Deploy the container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
-      - 'run'
-      - 'deploy'
-      - 'nasaspaceapp' # <-- Your Cloud Run service name
+      - 'run' # 'run deploy' is the full command
+      - 'deploy' # Your Cloud Run service name
+      - 'nasaspaceapp'
       - '--image=us-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/nasaspaceapp-image:latest'
-      - '--region=us-west1' # <-- Your service region
+      - '--region=us-west1'
       - '--platform=managed'
       - '--allow-unauthenticated'
-
-options:
-  # This tells Cloud Build to send logs to Cloud Logging instead of a GCS bucket.
-  logging: CLOUD_LOGGING_ONLY
+      - '--set-secrets=GEMINI_API_KEY=gemini-api-key:latest'
+     
+      - '--quiet' # Prevents interactive prompts
+images:
+  - 'us-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/nasaspaceapp-image:latest'
